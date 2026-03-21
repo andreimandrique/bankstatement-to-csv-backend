@@ -10,6 +10,6 @@
 
 export default {
 	async fetch(request, env, ctx) {
-		return new Response('Hello World! Andrei');
+		return new Response('Hello World! Cloudflare Worker');
 	},
 };
