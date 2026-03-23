@@ -1,12 +1,17 @@
-import { Router } from 'express';
-import { postUploadBankStatement } from '../controllers/uploadBankStatementController';
+import { Router } from "express";
+import multer from "multer";
+import { postUploadBankStatement } from "../controllers/uploadBankStatementController.js";
 
 const uploadBankStatementRouter = Router();
 
-import multer from 'multer';
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const multerMemoryStorage = { storage: multer.memoryStorage() };
+const multerDiskStorage = { dest: "./bucket/" };
+const upload = multer(multerDiskStorage);
 
-uploadBankStatementRouter.post('/', upload.single('file'), postUploadBankStatement);
+uploadBankStatementRouter.post(
+  "/",
+  upload.single("file"),
+  postUploadBankStatement,
+);
 
 export default uploadBankStatementRouter;
