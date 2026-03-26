@@ -6,8 +6,8 @@ const transactionSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  pdf_id: Number,
-  csv_id: Number,
+  bankstatement_pdf: String,
+  bankstatement_csv: String,
 });
 
 const Transaction = mongoose.model("Transaction", transactionSchema);
