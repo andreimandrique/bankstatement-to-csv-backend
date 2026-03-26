@@ -10,7 +10,7 @@ const upload = multer(multerDiskStorage);
 
 uploadBankStatementRouter.post(
   "/",
-  upload.single("file"),
+  // upload.single("file"),
   postUploadBankStatement,
 );
 
