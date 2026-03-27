@@ -12,7 +12,7 @@ const postUploadBankStatement = async (req, res) => {
 
   const myFolder = `bankstatement-pdf`;
   const myBucket = "my-bucket";
-  const myKey = `${myFolder}/${uniqueNameId}`;
+  const myKey = `${myFolder}/${uniqueNameId}.pdf`;
 
   await s3.send(
     new PutObjectCommand({
