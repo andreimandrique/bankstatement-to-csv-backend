@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import s3 from "../utils/s3.js";
 import celeryClient from "../utils/celeryClient.js";
+import Transaction from "../models/Transaction.js";
 
 const postUploadBankStatement = async (req, res) => {
   const uniqueNameId = uuidv4();
@@ -10,9 +11,18 @@ const postUploadBankStatement = async (req, res) => {
     return res.status(400).json({ message: "no file" });
   }
 
-  const myFolder = `bankstatement-pdf`;
+  const myFolder = "bankstatement-pdf";
   const myBucket = "my-bucket";
   const myKey = `${myFolder}/${uniqueNameId}.pdf`;
+
+  await Transaction.findOneAndUpdate(
+    { user_id: req.user.id },
+    {
+      bankstatement_pdf: `${uniqueNameId}.pdf`,
+      bankstatement_csv: `${uniqueNameId}.csv`,
+    },
+    { upsert: true, returnDocument: true },
+  );
 
   await s3.send(
     new PutObjectCommand({
@@ -27,9 +37,11 @@ const postUploadBankStatement = async (req, res) => {
     fileBucket: myBucket,
     fileKey: myKey,
     fileName: uniqueNameId,
+    userId: req.user.id,
   });
 
   res.json({ message: `upload file ${result.taskId}` });
+  //res.json({ message: "file upload" });
 };
 
 export { postUploadBankStatement };
