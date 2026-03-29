@@ -8,7 +8,17 @@ const postUploadBankStatement = async (req, res) => {
   const uniqueNameId = uuidv4();
 
   if (!req.file) {
-    return res.status(400).json({ message: "no file" });
+    return res.status(400).json({ message: "No file" });
+  }
+
+  const MAX_SIZE = 8 * 1024 * 1024;
+
+  if (req.file.size > MAX_SIZE) {
+    return res.status(400).json({ message: "File size exceeds 8MB limit" });
+  }
+
+  if (req.file.mimetype !== "application/pdf") {
+    return res.status(400).json({ message: "File must be pdf" });
   }
 
   const myFolder = "bankstatement-pdf";
@@ -33,14 +43,14 @@ const postUploadBankStatement = async (req, res) => {
     }),
   );
 
-  const result = celeryClient.sendTask("tasks.add", [], {
-    fileBucket: myBucket,
-    fileKey: myKey,
-    fileName: uniqueNameId,
-    userId: req.user.id,
-  });
+  // const result = celeryClient.sendTask("tasks.add", [], {
+  //   fileBucket: myBucket,
+  //   fileKey: myKey,
+  //   fileName: uniqueNameId,
+  //   userId: req.user.id,
+  // });
 
-  res.json({ message: `upload file ${result.taskId}` });
+  res.json({ message: `upload file` });
 };
 
 export { postUploadBankStatement };

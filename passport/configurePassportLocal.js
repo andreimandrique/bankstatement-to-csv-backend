@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 
-const configurePassport = () => {
+const configurePassportLocal = () => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       const user = { id: 1, username: "admin", password: "123" };
@@ -21,4 +21,4 @@ const configurePassport = () => {
   });
 };
 
-export default configurePassport;
+export default configurePassportLocal;
