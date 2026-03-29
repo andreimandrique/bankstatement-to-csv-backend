@@ -4,6 +4,7 @@ import connectMongoDb from "./db/connectMongoDb.js";
 
 import uploadBankStatementRouter from "./routes/uploadBankStatementRouter.js";
 import authRouter from "./routes/authRouter.js";
+import transactionRouter from "./routes/transactionRouter.js";
 
 connectMongoDb();
 
@@ -14,12 +15,7 @@ app.use(express.json());
 
 app.use("/upload", uploadBankStatementRouter);
 app.use("/auth", authRouter);
-
-app.post("/webhook", (req, res) => {
-  const { success, user_id } = req.body;
-  console.log({ success, user_id });
-  res.json({ message: "Webhook received" });
-});
+app.use("/transaction", transactionRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

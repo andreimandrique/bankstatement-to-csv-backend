@@ -41,7 +41,6 @@ const postUploadBankStatement = async (req, res) => {
   });
 
   res.json({ message: `upload file ${result.taskId}` });
-  //res.json({ message: "file upload" });
 };
 
 export { postUploadBankStatement };
