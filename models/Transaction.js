@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+  google_id: {
+    type: String,
     required: true,
+    ref: "User",
   },
   bankstatement_pdf: String,
   bankstatement_csv: String,

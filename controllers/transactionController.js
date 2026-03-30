@@ -3,6 +3,8 @@ import { redisSubscriber, redisPublisher } from "../utils/redisClient.js";
 const postTransaction = async (req, res) => {
   const { success, user_id } = req.body;
 
+  console.log({ success, user_id });
+
   await redisPublisher.publish(
     `channel:${user_id}`,
     JSON.stringify({ success, user_id }),

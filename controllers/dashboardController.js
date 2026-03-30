@@ -1,5 +1,5 @@
 const getDashboard = (req, res) => {
-  res.send("<h1>Dashboard</h1>");
+  res.render("dashboard", { error: null });
 };
 
 export { getDashboard };

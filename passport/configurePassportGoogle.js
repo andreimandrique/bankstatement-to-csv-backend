@@ -18,12 +18,12 @@ const configurePassportGoogle = () => {
     ),
   );
 
-  passport.serializeUser((user, done) => {
-    done(null, user);
+  passport.serializeUser((profile, done) => {
+    done(null, profile);
   });
 
-  passport.deserializeUser(async (user, done) => {
-    done(null, user);
+  passport.deserializeUser(async (profile, done) => {
+    done(null, profile);
   });
 };
 

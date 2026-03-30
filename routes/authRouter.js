@@ -1,15 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import {
-  postAuthLogin,
-  postAuthRegister,
-  getAuthLogout,
-} from "../controllers/authController.js";
+import { getAuthLogout } from "../controllers/authController.js";
 
 const authRouter = Router();
-
-authRouter.post("/login", postAuthLogin);
-authRouter.post("/register", postAuthRegister);
 
 authRouter.get(
   "/google",

@@ -6,6 +6,11 @@
     <title>Document</title>
   </head>
   <body>
-    <a href="/auth/google">Authenticate with google</a>
+    <p><%= error %></p>
+
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+      <input type="file" name="bankstatement" />
+      <button type="submit">Upload</button>
+    </form>
   </body>
 </html>

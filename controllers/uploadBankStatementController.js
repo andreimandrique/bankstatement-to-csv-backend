@@ -5,28 +5,27 @@ import celeryClient from "../utils/celeryClient.js";
 import Transaction from "../models/Transaction.js";
 
 const postUploadBankStatement = async (req, res) => {
-  const uniqueNameId = uuidv4();
-
   if (!req.file) {
-    return res.status(400).json({ message: "No file" });
+    return res.render("dashboard", { error: "No file" });
+  }
+
+  if (req.file.mimetype !== "application/pdf") {
+    return res.render("dashboard", { error: "File is must be pdf" });
   }
 
   const MAX_SIZE = 8 * 1024 * 1024;
 
   if (req.file.size > MAX_SIZE) {
-    return res.status(400).json({ message: "File size exceeds 8MB limit" });
+    return res.render("dashboard", { error: "File is too large" });
   }
 
-  if (req.file.mimetype !== "application/pdf") {
-    return res.status(400).json({ message: "File must be pdf" });
-  }
-
+  const uniqueNameId = uuidv4();
   const myFolder = "bankstatement-pdf";
   const myBucket = "my-bucket";
   const myKey = `${myFolder}/${uniqueNameId}.pdf`;
 
   await Transaction.findOneAndUpdate(
-    { user_id: req.user.id },
+    { google_id: req.user.sub },
     {
       bankstatement_pdf: `${uniqueNameId}.pdf`,
       bankstatement_csv: `${uniqueNameId}.csv`,
@@ -43,14 +42,14 @@ const postUploadBankStatement = async (req, res) => {
     }),
   );
 
-  // const result = celeryClient.sendTask("tasks.add", [], {
-  //   fileBucket: myBucket,
-  //   fileKey: myKey,
-  //   fileName: uniqueNameId,
-  //   userId: req.user.id,
-  // });
+  await celeryClient.sendTask("tasks.add", [], {
+    fileBucket: myBucket,
+    fileKey: myKey,
+    fileName: uniqueNameId,
+    googleId: req.user.sub,
+  });
 
-  res.json({ message: `upload file` });
+  res.redirect("/detail");
 };
 
 export { postUploadBankStatement };

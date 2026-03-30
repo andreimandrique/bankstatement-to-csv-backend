@@ -1,8 +1,9 @@
 const isLoggedIn = (req, res, next) => {
-  if (!req.user) {
-    return res.redirect("/");
+  if (req.isAuthenticated()) {
+    next();
+  } else {
+    res.redirect("/");
   }
-  next();
 };
 
 export default isLoggedIn;
