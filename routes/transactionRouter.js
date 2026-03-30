@@ -7,6 +7,6 @@ import {
 const transactionRouter = Router();
 
 transactionRouter.post("/", postTransaction);
-transactionRouter.get("/:user_id", getTransactionUserId);
+transactionRouter.get("/:google_id", getTransactionUserId);
 
 export default transactionRouter;

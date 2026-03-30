@@ -4,6 +4,6 @@ import isLoggedIn from "../middlewares/isLoggedIn.js";
 
 const dashboardRouter = Router();
 
-dashboardRouter.get("/", getDashboard);
+dashboardRouter.get("/", isLoggedIn, getDashboard);
 
 export default dashboardRouter;
