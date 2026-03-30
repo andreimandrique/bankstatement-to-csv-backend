@@ -1,28 +1,36 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
 import passport from "passport";
 import session from "express-session";
+import path from "path";
+import { fileURLToPath } from "url";
+
+dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import connectMongoDb from "./db/connectMongoDb.js";
 import configurePassportGoogle from "./passport/configurePassportGoogle.js";
 
+connectMongoDb();
+configurePassportGoogle();
+
 import uploadBankStatementRouter from "./routes/uploadBankStatementRouter.js";
 import authRouter from "./routes/authRouter.js";
 import transactionRouter from "./routes/transactionRouter.js";
-
-dotenv.config();
-connectMongoDb();
-configurePassportGoogle();
+import dashboardRouter from "./routes/dashboardRouter.js";
 
 const app = express();
 const port = 3000;
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-  }),
-);
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+const assetsPath = path.join(__dirname, "public");
+app.use(express.static(assetsPath));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -35,50 +43,18 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(express.json());
-
 app.use("/upload", uploadBankStatementRouter);
 app.use("/auth", authRouter);
 app.use("/transaction", transactionRouter);
-
-function isLoggedIn(req, res, next) {
-  if (!req.user) {
-    return res.status(401).send("Unauthorized");
-  }
-  //console.log(req.user);
-  next();
-}
-
-app.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["email", "profile"] }),
-);
-
-app.get(
-  "/auth/google/callback",
-  passport.authenticate("google", {
-    successRedirect: "/protected",
-    failureRedirect: "/",
-  }),
-);
-
-app.get("/protected", isLoggedIn, (req, res) => {
-  res.send("<h1>Protected</h1>");
-});
+app.use("/dashboard", dashboardRouter);
 
 app.get("/", (req, res) => {
-  res.send('<a href="/auth/google">Authenticate with google</a>');
+  res.render("index");
 });
 
-app.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    req.session.destroy(() => {
-      res.redirect("/");
-    });
-  });
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send("Something broke!");
 });
 
 app.listen(port, () => {
