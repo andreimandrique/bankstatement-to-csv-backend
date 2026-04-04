@@ -5,5 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <p><%= google_id %></p>
+
+    <a href="http://localhost:3000/download"> Download CSV </a>
+
+    <script>
+      const eventSource = new EventSource(
+        `http://localhost:3000/transaction/<%= google_id %>`,
+        {
+          withCredentials: true,
+        },
+      );
+
+      eventSource.onmessage = (event) => {
+        const eventData = JSON.parse(event.data);
+        console.log(eventData);
+      };
+    </script>
+  </body>
 </html>

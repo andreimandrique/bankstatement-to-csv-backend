@@ -1,9 +1,18 @@
 import { redisSubscriber, redisPublisher } from "../utils/redisClient.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const postTransaction = async (req, res) => {
-  const { success, google_id } = req.body;
+  const incomingToken = req.headers["x-celery-signature"];
+  const celerySecret = process.env.CELERY_SIGNATURE;
+  console.log(req.headers);
 
-  console.log({ success, google_id });
+  if (!incomingToken || incomingToken !== celerySecret) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const { success, google_id } = req.body;
 
   await redisPublisher.publish(
     `channel:${google_id}`,

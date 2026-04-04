@@ -20,6 +20,7 @@ import authRouter from "./routes/authRouter.js";
 import transactionRouter from "./routes/transactionRouter.js";
 import dashboardRouter from "./routes/dashboardRouter.js";
 import detailRouter from "./routes/detailRouter.js";
+import downloadBankStatementRouter from "./routes/downloadBankStatementRouter.js";
 
 import mockIsLoggedIn from "./middlewares/mockIsLoggedIn.js";
 
@@ -44,13 +45,14 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(mockIsLoggedIn);
+//app.use(mockIsLoggedIn);
 
 app.use("/upload", uploadBankStatementRouter);
 app.use("/auth", authRouter);
 app.use("/transaction", transactionRouter);
 app.use("/dashboard", dashboardRouter);
 app.use("/detail", detailRouter);
+app.use("/download", downloadBankStatementRouter);
 
 app.get("/", (req, res) => {
   res.render("index");

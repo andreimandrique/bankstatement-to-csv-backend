@@ -1,5 +1,5 @@
 const getDetail = (req, res) => {
-  res.render("detail");
+  res.render("detail", { google_id: req.user.sub });
 };
 
 export { getDetail };
