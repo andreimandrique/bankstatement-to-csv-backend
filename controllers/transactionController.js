@@ -6,7 +6,6 @@ dotenv.config();
 const postTransaction = async (req, res) => {
   const incomingToken = req.headers["x-celery-signature"];
   const celerySecret = process.env.CELERY_SIGNATURE;
-  console.log(req.headers);
 
   if (!incomingToken || incomingToken !== celerySecret) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -23,7 +22,17 @@ const postTransaction = async (req, res) => {
 };
 
 const getTransactionUserId = async (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const { google_id } = req.params;
+
+  if (google_id !== req.user.sub) {
+    return res
+      .status(403)
+      .json({ error: "Forbidden: You cannot listen to other users." });
+  }
 
   res.writeHead(200, {
     "Content-Type": "text/event-stream",

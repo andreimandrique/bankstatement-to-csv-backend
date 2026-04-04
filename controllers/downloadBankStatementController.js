@@ -20,7 +20,7 @@ const getDownloadBankStatement = async (req, res) => {
   res.writeHead(200, {
     "Content-Type": response.ContentType,
     "Content-Length": response.ContentLength,
-    "Content-Disposition": `attachment; filename=${uniqueNameId}`,
+    "Content-Disposition": `attachment; filename=bankstatement.csv`,
   });
 
   response.Body.pipe(res);
