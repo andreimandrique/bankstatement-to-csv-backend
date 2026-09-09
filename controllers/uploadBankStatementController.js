@@ -21,7 +21,7 @@ const postUploadBankStatement = async (req, res) => {
 
   const uniqueNameId = uuidv4();
   const myFolder = "bankstatement-pdf";
-  const myBucket = "my-bucket";
+  const myBucket = "bankstatement-to-csv";
   const myKey = `${myFolder}/${uniqueNameId}.pdf`;
 
   await Transaction.findOneAndUpdate(

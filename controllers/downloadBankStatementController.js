@@ -7,7 +7,7 @@ const getDownloadBankStatement = async (req, res) => {
 
   const uniqueNameId = transaction.bankstatement_csv;
   const myFolder = "bankstatement-csv";
-  const myBucket = "my-bucket";
+  const myBucket = "bankstatement-to-csv";
   const myKey = `${myFolder}/${uniqueNameId}`;
 
   const bucketParams = {

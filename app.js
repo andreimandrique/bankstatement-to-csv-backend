@@ -45,7 +45,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-//app.use(mockIsLoggedIn);
 
 app.use("/upload", uploadBankStatementRouter);
 app.use("/auth", authRouter);
